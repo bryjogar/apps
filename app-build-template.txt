@@ -1,10 +1,10 @@
-name: Build verification
+name: Build $AppName
 
 on:
   push:
     branches: [ "main" ]
     paths:
-      - 'verification/**'  # Triggers only when this specific folder changes
+      - '$AppName/**'  # Triggers only when this specific folder changes
 
 # CRITICAL ADDITION: Permissions needed to upload Release assets
 permissions:
@@ -24,17 +24,17 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
-        run: chmod +x verification/gradlew
+        run: chmod +x $AppName/gradlew
 
       # 1. Decode Keystore from Secrets
       # Note: We decode into the 'app' folder so it's easy for Gradle to find
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > verification/app/release.jks
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > $AppName/app/release.jks
 
       # 2. Build the Signed APK
       - name: Build with Gradle
-        run: cd verification && ./gradlew assembleRelease
+        run: cd $AppName && ./gradlew assembleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
@@ -42,13 +42,13 @@ jobs:
 
       # 3. Rename APK (to avoid generic 'app-release.apk')
       - name: Rename APK
-        run: mv verification/app/build/outputs/apk/release/app-release.apk verification/app/build/outputs/apk/release/verification.apk
+        run: mv $AppName/app/build/outputs/apk/release/app-release.apk $AppName/app/build/outputs/apk/release/$AppName.apk
 
-      # 4. Upload to "verification-latest" Release
+      # 4. Upload to "$AppName-latest" Release
       - name: Release APK
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: verification-latest
-          name: "verification (Latest)"
-          files: verification/app/build/outputs/apk/release/verification.apk
+          tag_name: $AppName-latest
+          name: "$AppName (Latest)"
+          files: $AppName/app/build/outputs/apk/release/$AppName.apk
           overwrite: true

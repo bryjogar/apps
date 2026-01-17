@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
 fun VerificationScreen() {
     val currentDateTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"))
     Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
-        Text(text = "Verification Success\n$currentDateTime", color = Color.Red)
+        Text(text = "Verification Success!\n$currentDateTime", color = Color.Red)
     }
 }
 

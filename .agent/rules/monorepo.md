@@ -20,36 +20,60 @@ Every time you scaffold a new application, you MUST adhere to the following 5 Gu
 - **Action:** Create a file at `.github/workflows/[app-name]-build.yml`.
 - **Template:** Use this specific structure (replacing `APP_NAME`):
   ```yaml
-  name: Build APP_NAME
-  on:
-    push:
-      branches: ["main"]
-      paths: ["APP_NAME/**"]
-  permissions:
-    contents: write
-  jobs:
-    build:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - name: Set up JDK 17
-          uses: actions/setup-java@v3
-          with: { java-version: '17', distribution: 'temurin' }
-        - name: Decode Keystore
-          run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > APP_NAME/app/release.jks
-        - name: Build Release
-          # Note: We use the wrapper inside the app folder
-          run: cd APP_NAME && chmod +x gradlew && ./gradlew assembleRelease
-          env:
-            KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
-            KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
-            KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
-        - name: Release APK
-          uses: softprops/action-gh-release@v1
-          with:
-            tag_name: APP_NAME-latest
-            files: APP_NAME/app/build/outputs/apk/release/APP_NAME.apk
-            overwrite: true
+name: Build APP_NAME
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'APP_NAME/**'  # Triggers only when this specific folder changes
+
+# CRITICAL ADDITION: Permissions needed to upload Release assets
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x APP_NAME/gradlew
+
+      # 1. Decode Keystore from Secrets
+      # Note: We decode into the 'app' folder so it's easy for Gradle to find
+      - name: Decode Keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > APP_NAME/app/release.jks
+
+      # 2. Build the Signed APK
+      - name: Build with Gradle
+        run: cd APP_NAME && ./gradlew assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      # 3. Rename APK (to avoid generic 'app-release.apk')
+      - name: Rename APK
+        run: mv APP_NAME/app/build/outputs/apk/release/app-release.apk APP_NAME/app/build/outputs/apk/release/APP_NAME.apk
+
+      # 4. Upload to "APP_NAME-latest" Release
+      - name: Release APK
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: APP_NAME-latest
+          name: "APP_NAME (Latest)"
+          files: APP_NAME/app/build/outputs/apk/release/APP_NAME.apk
+          overwrite: true
   ```
 
 ## 4. The "Signing" Law
