@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "main" ]
     paths:
-      - 'verify/**'  # Triggers only when this specific folder changes
+      - 'build-verifier/**'  # Triggers only when this specific folder changes
 
 # CRITICAL ADDITION: Permissions needed to upload Release assets
 permissions:
