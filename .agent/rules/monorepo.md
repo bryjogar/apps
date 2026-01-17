@@ -93,3 +93,14 @@ buildTypes {
     </div>
 </a>
 ```
+
+
+## 6. The "Version Lock" Law (CRITICAL)
+- **Problem:** Jetpack Compose Compiler versions are strictly tied to the Kotlin Gradle Plugin version. Mismatches cause build failures.
+- **Requirement:** ALWAYS use the following specific version combination when scaffolding `build.gradle.kts` and `libs.versions.toml`:
+  - **Kotlin Gradle Plugin:** `1.9.22`
+  - **Compose Compiler Extension:** `1.5.10`
+  - **Android Gradle Plugin (AGP):** `8.2.0`
+- **Implementation:**
+  - In project-level build file: `id("org.jetbrains.kotlin.android") version "1.9.22"`
+  - In app-level build file: `composeOptions { kotlinCompilerExtensionVersion = "1.5.10" }`
