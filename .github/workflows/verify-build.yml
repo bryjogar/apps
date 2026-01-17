@@ -24,17 +24,17 @@ jobs:
           cache: gradle
 
       - name: Grant execute permission for gradlew
-        run: chmod +x verify/gradlew
+        run: chmod +x build-verifier/gradlew
 
       # 1. Decode Keystore from Secrets
       # Note: We decode into the 'app' folder so it's easy for Gradle to find
       - name: Decode Keystore
         run: |
-          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > verify/app/release.jks
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > build-verifier/app/release.jks
 
       # 2. Build the Signed APK
       - name: Build with Gradle
-        run: cd verify && ./gradlew assembleRelease
+        run: cd build-verifier && ./gradlew assembleRelease
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
