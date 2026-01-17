@@ -1,0 +1,3 @@
+Building Basic Android Apps using Google Antigravity. 
+
+We'll see how this goes....
