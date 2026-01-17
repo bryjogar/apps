@@ -2,27 +2,63 @@
 trigger: always_on
 ---
 
-# Antigravity Workspace Rules for bryangarrison/apps
+You are a Senior Android Build Engineer working in a Monorepo.
+Every time you scaffold a new application, you MUST adhere to the following 5 Guardrails.
 
-## 1. Monorepo Structure
-- We are in a **Monorepo**. The root contains the website (`index.html`).
-- Each application lives in its own **isolated sub-directory** (e.g., `ereader/`, `verify/`).
-- **DO NOT** create a new git repository inside sub-directories.
+## 1. Monorepo Architecture
+- **Root Context:** We are in a git monorepo. The user's specific app lives in a sub-directory (e.g., `budget/`, `ereader/`).
+- **No Git Init:** DO NOT initialize a new git repository (`git init`) inside the sub-directory.
+- **Language:** Use Kotlin + Jetpack Compose (Material3).
 
-## 2. Android Architecture Standards
-- **Language:** Kotlin + Jetpack Compose (Material3).
-- **Build System:** Gradle (Kotlin DSL).
-- **Target:** MinSDK 26, TargetSDK 34+.
+## 2. The "Gradle Wrapper" Law (CRITICAL)
+- **Constraint:** You (the AI) cannot generate binary files (`.jar`).
+- **Action:** You must copy the Gradle engine from the template folder.
+  `cp -r _templates/* [new-app-folder]/`
 
-## 3. CI/CD & Signing (CRITICAL)
-- **NEVER** hardcode keystore passwords in `build.gradle.kts`.
-- **ALWAYS** configure the `release` signing config to read from Environment Variables.
-- **ALWAYS** use this exact signing block in `app/build.gradle.kts`:
+## 3. The "CI/CD" Law
+- **Requirement:** Every new app requires a GitHub Action workflow.
+- **Action:** Create a file at `.github/workflows/[app-name]-build.yml`.
+- **Template:** Use this specific structure (replacing `APP_NAME`):
+  ```yaml
+  name: Build APP_NAME
+  on:
+    push:
+      branches: ["main"]
+      paths: ["APP_NAME/**"]
+  permissions:
+    contents: write
+  jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Set up JDK 17
+          uses: actions/setup-java@v3
+          with: { java-version: '17', distribution: 'temurin' }
+        - name: Decode Keystore
+          run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > APP_NAME/app/release.jks
+        - name: Build Release
+          # Note: We use the wrapper inside the app folder
+          run: cd APP_NAME && chmod +x gradlew && ./gradlew assembleRelease
+          env:
+            KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+            KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+            KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+        - name: Release APK
+          uses: softprops/action-gh-release@v1
+          with:
+            tag_name: APP_NAME-latest
+            files: APP_NAME/app/build/outputs/apk/release/APP_NAME.apk
+            overwrite: true
+  ```
 
-```kotlin
+## 4. The "Signing" Law
+- **Requirement:** build.gradle.kts must read secrets from Environment Variables.
+- **Code Block:** ALWAYS inject this into app/build.gradle.kts inside the android {} block:
+```
 signingConfigs {
     create("release") {
-        storeFile = file("../../certs/release.jks") // Shared Keystore in root
+        storeFile = file("release.jks")
         storePassword = System.getenv("KEYSTORE_PASSWORD")
         keyAlias = System.getenv("KEY_ALIAS")
         keyPassword = System.getenv("KEY_PASSWORD")
@@ -36,23 +72,3 @@ buildTypes {
     }
 }
 ```
-
-## 4. Automation Compatibility
-When scaffolding a new app, assume a GitHub Actions workflow will be created for it.
-
-The workflow will inject the secrets KEYSTORE_PASSWORD, KEY_ALIAS, and KEY_PASSWORD.
-
-## 5. New App Scaffolding Standards
-When creating a new Android application module:
-
-1.  **AndroidX Support**: ALWAYS create a `gradle.properties` file in the module root containing:
-    ```properties
-    android.useAndroidX=true
-    ```
-2.  **Standard Resources**: ALWAYS create the following standard resource files in `app/src/main/res/` to prevent build errors:
-    - `values/themes.xml` (Define `Theme.<AppName>`)
-    - `mipmap-anydpi-v26/ic_launcher.xml` & `ic_launcher_round.xml`
-    - `drawable/ic_launcher_background.xml` & `ic_launcher_foreground.xml`
-    - `xml/data_extraction_rules.xml` & `xml/backup_rules.xml` (Referenced in standard manifests)
-3.  **Gradle Wrapper**: ALWAYS ensure the Gradle Wrapper (`gradlew`, `gradlew.bat`, `gradle/wrapper/`) is properly initialized in the module directory.
-    - **Recommended**: Copy these files from the repository root (if available) or another working module to ensure version consistency.
