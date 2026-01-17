@@ -1,0 +1,30 @@
+name: Build verification
+on:
+  push:
+    branches: ["main"]
+    paths: ["verification/**"]
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with: { java-version: '17', distribution: 'temurin' }
+      - name: Decode Keystore
+        run: echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > verification/app/release.jks
+      - name: Build Release
+        # Note: We use the wrapper inside the app folder
+        run: cd verification && chmod +x gradlew && ./gradlew assembleRelease
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+      - name: Release APK
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: verification-latest
+          files: verification/app/build/outputs/apk/release/verification.apk
+          overwrite: true

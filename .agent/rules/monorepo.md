@@ -72,3 +72,24 @@ buildTypes {
     }
 }
 ```
+
+## 5. The "Accessibility" Law
+- **Requirement:** the user must be able to download the APK upon build completion.
+- **Action:** Add a new app link card to the index.html page for newly created applications.
+- **Template:** Use the following HTML structure:
+```
+<a href="https://github.com/bryjogar/apps/releases/download/APP_NAME-latest/APP_NAME.apk" class="block group">
+    <div class="bg-obsidian-pane border border-obsidian-border rounded-xl p-6 h-full transition-all duration-300 card-hover group-hover:border-obsidian-accent/50">
+        <div class="flex items-start justify-between mb-4">
+            <div class="p-3 bg-[#111827] rounded-lg text-obsidian-accent group-hover:bg-obsidian-accent group-hover:text-white transition-colors">
+                <i class="fa-solid ICON text-xl"></i>
+            </div>
+            <i class="fa-solid fa-arrow-right text-gray-600 group-hover:text-obsidian-accent -translate-x-2 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 transition-all"></i>
+        </div>
+        <h3 class="text-xl font-semibold text-white mb-2">APP_NAME</h3>
+        <p class="text-sm text-gray-500 leading-relaxed">
+            WRITE BRIEF DESCRIPTION
+        </p>
+    </div>
+</a>
+```
