@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.bryjogar.calculator.app-merged_res-41:/xml_data_extraction_rules.xml.flat",
+        "source": "com.bryjogar.calculator.app-main-42:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.bryjogar.calculator.app-merged_res-41:/drawable_ic_launcher.png.flat",
+        "source": "com.bryjogar.calculator.app-main-42:/drawable/ic_launcher.png"
+    },
+    {
+        "merged": "com.bryjogar.calculator.app-merged_res-41:/xml_backup_rules.xml.flat",
+        "source": "com.bryjogar.calculator.app-main-42:/xml/backup_rules.xml"
+    }
+]
