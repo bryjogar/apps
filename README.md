@@ -14,7 +14,12 @@ Welcome to the `apps` monorepo. This document serves as the **Source of Truth** 
 *   **No Git Init**: **DO NOT** initialize a new git repository (`git init`) inside sub-directories. The root is the git repo.
 *   **Language**: Kotlin + Jetpack Compose (Material3).
 
-## 3. The "Gradle Wrapper" Law (CRITICAL)
+## 3. Known Issues & Troubleshooting
+*   **Java 25 Incompatibility**: Android Gradle Plugin 8.2.0 does not support Java 25. The `dev.ps1` script automatically handles this by switching to the embedded Android Studio JBR (Java 21).
+*   **Missing Resources**: If `AAPT` complains about missing `mipmap` resources, checks that you are using `@drawable/ic_launcher` and the file exists in `src/main/res/drawable`.
+*   **Unresolved References (Compose)**: If `viewModel()` or `ui` references are missing, ensure `lifecycle-viewmodel-compose` is in your dependencies.
+
+## 4. The "Gradle Wrapper" Law (CRITICAL)
 *   **Constraint**: You cannot generate binary files (`.jar`).
 *   **Action**: You must copy the Gradle engine from the template folder.
     *   Command: `cp -r _templates/* [new-app-folder]/`

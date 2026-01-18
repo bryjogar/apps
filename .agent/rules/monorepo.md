@@ -136,13 +136,30 @@ buildTypes {
   - In app-level build file: `composeOptions { kotlinCompilerExtensionVersion = "1.5.10" }`
 
 
-## 8. The "Local Dev" Law (PowerShell Automation)
+
+## 8. The "Java Compatibility" Law
+- **Problem:** Newer system Java versions (e.g., JDK 25) break Android Gradle builds.
+- **Requirement:** Workflows and scripts must enforce usage of a compatible JDK (JDK 17 or 21).
+- **Automation:** The `dev.ps1` script is already patched to detect this and switch to Android Studio's embedded JBR if needed. Do not remove this logic.
+
+## 9. The "Resource" Law
+- **Constraint:** Icons must be `drawable`, not `mipmap` (unless you generate full density sets).
+- **Requirement:** 
+  - Place `icon.png` in `app/src/main/res/drawable/`.
+  - In `AndroidManifest.xml`, use `android:icon="@drawable/ic_launcher"`.
+  - Do NOT use `android:roundIcon` unless you actually have one.
+
+## 10. The "Dependency" Law
+- **Requirement:** When using Jetpack Compose ViewModels, you MUST explicitly include `androidx.lifecycle:lifecycle-viewmodel-compose`.
+- **Reason:** It is not transitively included by valid `activity-compose` versions, leading to compilation errors.
+
+## 11. The "Local Dev" Law (PowerShell Automation)
 - **Goal:** Enable seamless local verification.
-- **Requirement:** For every new app, verify the `dev.ps1` script exists in the app's root folder. Should have been copied from _templates/ in rule #2.
-- **Action:** When applications are ready for initial testing but not production, use the terminal to execute the script and await user feedback
+- **Requirement:** For every new app, verify the `dev.ps1` script exists in the app's root folder. Should have been copied from _templates/ in rule #3.
+- **Action:** When applications are ready for initial testing but not production, agents are to use the terminal to execute the dev.ps1 script and await user feedback
 
 
-## 9. The "Agent Memory" Law (Documentation)
+## 12. The "Agent Memory" Law (Documentation)
 - **Goal:** Ensure future agents (and the user) can pick up the project instantly.
 - **Requirement:** Every app MUST have a `README.md` in its root.
 - **Structure:**
@@ -150,4 +167,3 @@ buildTypes {
   2. **Tech Decisions:** Brief notes on *why* certain libraries were chosen (e.g., "Used Room instead of DataStore because complex queries are needed").
   3. **Manual Tasks:** A list of things the user must do manually (e.g., "Confirm the positioning of button on main dashboard in the emulator").
   4. **Agent Context:** A dedicated section called `## For Future Agents`. List known hacks, unfinished ideas, or specific constraints here.
-
