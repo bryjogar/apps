@@ -109,11 +109,18 @@ buildTypes {
 - **Format:**
   ```html
   <div class="app-card">
-      <div class="app-info">
-          <h2>[App Name]</h2>
+      <div class="card">
+          <div class="card-header">
+              <!-- Ensure [app-name]/icon.png exists -->
+              <img src="[app-name]/icon.png" alt="[App Name] Icon" class="app-icon" onerror="this.style.display='none'">
+              <div class="card-title-group">
+                  <h2>[App Name]</h2>
+                  <span class="status-badge status-new">Fresh Build</span>
+              </div>
+          </div>
           <p>[Short Description]</p>
+          <a href="https://github.com/bryjogar/apps/releases/download/[app-name]-latest/[app-name].apk" class="btn">Download APK</a>
       </div>
-      <a href="[https://github.com/bryangarrison/apps/releases/download/](https://github.com/bryangarrison/apps/releases/download/)[app-name]-latest/[app-name].apk" class="download-btn">Download</a>
   </div>
   ```
 

@@ -1,0 +1,327 @@
+:root {
+    /* Color Palette - Blurple Theme (Default Light) */
+    --primary-color: #5865F2;
+    /* Blurple */
+    --primary-hover: #4752c4;
+    --background-color: #f9f9f9;
+    --card-background: #ffffff;
+    --text-color: #2c2f33;
+    --text-muted: #72767d;
+    /* Slightly darker for better contrast */
+    --border-color: #e3e5e8;
+    --mission-bg: #ffffff;
+
+    /* Toggle Button */
+    --toggle-bg: #e3e5e8;
+    --toggle-icon: #2c2f33;
+
+    /* Typography */
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+
+    /* Spacing */
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 4rem;
+
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Dark Mode Overrides */
+[data-theme="dark"] {
+    --primary-color: #5865F2;
+    /* Keep Blurple or adjust if needed */
+    --primary-hover: #4752c4;
+    --background-color: #202225;
+    /* Dark Discord-like background */
+    --card-background: #2f3136;
+    --text-color: #dcddde;
+    --text-muted: #b9bbbe;
+    --border-color: #202225;
+    --mission-bg: #2f3136;
+
+    --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+
+    --toggle-bg: #4f545c;
+    --toggle-icon: #ffcc00;
+    /* Sun color for toggle */
+}
+
+/* System Preference Default */
+@media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+        --primary-color: #5865F2;
+        --primary-hover: #4752c4;
+        --background-color: #202225;
+        --card-background: #2f3136;
+        --text-color: #dcddde;
+        --text-muted: #b9bbbe;
+        --border-color: #202225;
+        --mission-bg: #2f3136;
+
+        --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+        --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+
+        --toggle-bg: #4f545c;
+        --toggle-icon: #ffcc00;
+    }
+}
+
+
+/* Reset and Base Styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Layout */
+.container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: var(--spacing-lg);
+}
+
+header {
+    text-align: center;
+    padding-top: var(--spacing-xl);
+    padding-bottom: var(--spacing-lg);
+    animation: fadeInDown 0.8s ease-out;
+    position: relative;
+    /* For toggle positioning */
+}
+
+.theme-toggle {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--toggle-bg);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--toggle-icon);
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.theme-toggle:hover {
+    filter: brightness(1.2);
+}
+
+.theme-toggle svg {
+    width: 20px;
+    height: 20px;
+}
+
+main {
+    flex: 1;
+}
+
+footer {
+    text-align: center;
+    padding: var(--spacing-lg);
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+/* Typography */
+h1 {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary-color);
+    letter-spacing: -1px;
+}
+
+.subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    font-weight: 400;
+}
+
+h2 {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    margin-bottom: var(--spacing-sm);
+}
+
+p {
+    margin-bottom: var(--spacing-md);
+}
+
+/* Mission Section */
+.mission {
+    max-width: 800px;
+    margin: 0 auto var(--spacing-xl);
+    text-align: center;
+    padding: var(--spacing-lg);
+    background: var(--mission-bg);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-soft);
+}
+
+.mission h3 {
+    font-family: var(--font-heading);
+    color: var(--primary-color);
+    margin-bottom: var(--spacing-md);
+}
+
+/* App Grid */
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    justify-content: center;
+}
+
+/* Cards */
+.card {
+    background: var(--card-background);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-soft);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary-color);
+}
+
+.card-header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--spacing-md);
+}
+
+.app-icon {
+    width: 64px;
+    height: 64px;
+    background-color: var(--background-color);
+    border-radius: var(--radius-md);
+    margin-right: var(--spacing-md);
+    object-fit: contain;
+    /* Clean fallback if image missing */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.card-title-group {
+    flex: 1;
+}
+
+.status-badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-operational {
+    background-color: #e6f4ea;
+    color: #1e8e3e;
+}
+
+.status-new {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+}
+
+.card p {
+    color: var(--text-color);
+    flex: 1;
+    /* Pushes the button to the bottom */
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    width: 100%;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: var(--primary-hover);
+    transform: scale(1.02);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Animations */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2.5rem;
+    }
+
+    .container {
+        padding: var(--spacing-md);
+    }
+
+    .app-grid {
+        grid-template-columns: 1fr;
+    }
+}

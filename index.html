@@ -5,77 +5,102 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Apps | Bryan Garrison</title>
-    <style>
-        body {
-            font-family: system-ui, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-            min-height: 100vh;
-            margin: 0;
-            background: #f0f0f0;
-            box-sizing: border-box;
-        }
 
-        .card {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+    <!-- Preconnect for Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
 
-        h1 {
-            margin: 0 0 0.5rem 0;
-        }
-
-        p {
-            color: #666;
-        }
-
-        .status {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 4px 12px;
-            background: #e6f4ea;
-            color: #1e8e3e;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 0.8rem;
-        }
-    </style>
+    <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
-    <div style="text-align: center; margin-bottom: 2rem; width: 100%;">
-        <h1 style="margin-bottom: 0.5rem;">apps.homelabplayground.com</h1>
-        <p style="color: #666; margin: 0;">Internal App Distribution</p>
+    <div class="container">
+        <header>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                <!-- Sun Icon -->
+                <svg id="icon-sun" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    style="display: none;">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <!-- Moon Icon -->
+                <svg id="icon-moon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+            <h1>Homelab Playground</h1>
+            <p class="subtitle">Internal App Distribution & Tools</p>
+        </header>
+
+        <main>
+            <section class="mission">
+                <h3>Our Mission</h3>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore
+                    et dolore magna aliqua.
+                    Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                    consequat.
+                    Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+                    pariatur.
+                </p>
+            </section>
+
+            <div class="app-grid">
+                <!-- App Cards go here-->
+
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 Bryan Garrison. No ads. No tracking. Pure code.</p>
+        </footer>
     </div>
 
-    <div style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
-        <div class="card">
-            <h2>Verification</h2>
-            <p>System Check</p>
-            <span class="status">● Operational</span>
-            <div style="margin-top: 20px;">
-                <a href="https://github.com/bryjogar/apps/releases/download/verification-latest/verification.apk"
-                    style="text-decoration: none; background: #28a745; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; display: inline-block;">Download
-                    APK</a>
-            </div>
-        </div>
+    <script>
+        // Theme Toggle Logic
+        const toggleBtn = document.getElementById('theme-toggle');
+        const sunIcon = document.getElementById('icon-sun');
+        const moonIcon = document.getElementById('icon-moon');
+        const root = document.documentElement;
 
-        <div class="card">
-            <h2>Pipeline</h2>
-            <p>Time & Image Test</p>
-            <span class="status">● New Deployment</span>
-            <div style="margin-top: 20px;">
-                <a href="https://github.com/bryjogar/apps/releases/download/pipeline-latest/pipeline.apk"
-                    style="text-decoration: none; background: #007bff; color: white; padding: 10px 20px; border-radius: 5px; font-weight: bold; display: inline-block;">Download
-                    APK</a>
-            </div>
-        </div>
-    </div>
+        // Check local storage or system preference
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        let currentTheme = savedTheme || (systemPrefersDark ? 'dark' : 'light');
+
+        function updateTheme(theme) {
+            root.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+
+            if (theme === 'dark') {
+                sunIcon.style.display = 'block';
+                moonIcon.style.display = 'none';
+            } else {
+                sunIcon.style.display = 'none';
+                moonIcon.style.display = 'block';
+            }
+        }
+
+        // Initial set
+        updateTheme(currentTheme);
+
+        toggleBtn.addEventListener('click', () => {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            updateTheme(currentTheme);
+        });
+    </script>
 </body>
 
 </html>
